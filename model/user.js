@@ -19,8 +19,9 @@ module.exports = {
       .then((nextId) => {
         user.id = nextId
         return dbLib.get()
-          .then((db) => col(db).insertOne(util.prepareData(user, attrsUser)).then(() => col(db).find().toArray()))
       })
+      .then((db) => col(db).insertOne(util.prepareData(user, attrsUser))
+      .then(() => col(db).find().toArray()))
   },
   getAll: (filters) => {
     return dbLib.get()

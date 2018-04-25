@@ -17,20 +17,22 @@ const col = db => db.collection('states')
 
 module.exports = {
   create: (data) => {
-    if (!util.checkFields(attrsState.slice(1), data)) return Promise.reject('noInfoCreateState')
-    if (!remoteCollection.includes(data.remote_collection)) return Promise.reject('noRemoteCollection')
-    if (!fieldNames.includes(data.field_name)) return Promise.reject('noFieldName')
-  // Comprobar si existe remote collection
-    const firstNullState = module.exports.firstNullState(data)
-    let state = {}
-    if (firstNullState !== undefined) {
-      const prevStates = util.nextStates(firstNullState, collection)
-      data.prev_state_id = prevStates[prevStates.length - 1].id
-    } else {
-      data.prev_state_id = null
-    }
-    return User
-      .get(data.user_id)
+    return dbLib.get()
+      .then((db) => Promise.all([col(db).find({}).toArray(), module.exports.firstNullState(data)]))
+      .then(([everyStates, firstNullState]) => {
+        if (!util.checkFields(attrsState.slice(1), data)) return Promise.reject('noInfoCreateState')
+        if (!remoteCollection.includes(data.remote_collection)) return Promise.reject('noRemoteCollection')
+        if (!fieldNames.includes(data.field_name)) return Promise.reject('noFieldName')
+        // Comprobar si existe remote collection
+        let state = {}
+        if (firstNullState !== null) {
+          const prevStates = util.nextStates(firstNullState, everyStates)
+          data.prev_state_id = prevStates[prevStates.length - 1].id
+        } else {
+          data.prev_state_id = null
+        }
+        return User.get(data.user_id)
+      })
       .then((user) => {
         if (user === null) return Promise.reject('noUser')
         return util.nextId('states')
@@ -40,7 +42,7 @@ module.exports = {
         state.id = nextId
         return dbLib.get()
       })
-      .then((db) => col(db).insertOne(util.prepareData(state, attrsState)).then(() => col(db).find().toArray()))
+    .then((db) => col(db).insertOne(util.prepareData(state, attrsState)).then(() => col(db).find().toArray()))
   },
   getAll: () => {
     return dbLib.get()
@@ -52,8 +54,8 @@ module.exports = {
   },
   hidrate: (type, ele) => {
     return dbLib.get()
-      .then((db) => Promise.all([col(db).find({remote_id: ele.id, remote_collection: type}).toArray(),col(db).find({remote_id: ele.id, remote_collection: type, prev_state_id: null }).toArray()]))
-      .then(([everyState,allFirstStates]) => {
+      .then((db) => Promise.all([col(db).find({ remote_id: ele.id, remote_collection: type }).toArray(), col(db).find({ remote_id: ele.id, remote_collection: type, prev_state_id: null }).toArray()]))
+      .then(([everyState, allFirstStates]) => {
         const fullStates = allFirstStates.map((ele) => {
           return util.nextStates(ele, everyState)
         })
@@ -83,11 +85,27 @@ module.exports = {
 
   firstNullState: (data) => {
     return dbLib.get()
-      .then((db) => col(db).find({remote_id: data.remote_id, remote_collection: data.remote_collection, field_name: data.field_name, prev_state_id: null}))
+      .then((db) => col(db).findOne({ remote_id: data.remote_id, remote_collection: data.remote_collection, field_name: data.field_name, prev_state_id: null }))
     // return collection.find(state => (state.remote_id === data.remote_id && state.remote_collection === data.remote_collection &&
     //   state.field_name === data.field_name && state.prev_state_id === null))
   },
-  __emptyCollection__:() => {
+  findOneState: (prop, filter) => {
+    if (prop === null) return false
+    // Last one name selected. It could be an array. In every state we are going to fitler by name
+    const stateValue = prop[prop.length - 1].value.name
+    if (typeof stateValue === 'boolean') {
+      if (stateValue === filter) return true
+      return false
+    }
+    return filter.some((v) => {
+      if (stateValue === parseInt(stateValue, 10)) return (stateValue === v)
+      return stateValue.indexOf(v) >= 0
+    })
+  },
+  nextStates: (firsState, collection) => {
+    return util.nextStates(firsState, collection)
+  },
+  __emptyCollection__: () => {
     return dbLib.get()
       .then((db) => col(db).remove({}))
   }
