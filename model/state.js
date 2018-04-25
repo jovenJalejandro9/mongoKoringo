@@ -20,6 +20,7 @@ module.exports = {
     if (!util.checkFields(attrsState.slice(1), data)) return Promise.reject('noInfoCreateState')
     if (!remoteCollection.includes(data.remote_collection)) return Promise.reject('noRemoteCollection')
     if (!fieldNames.includes(data.field_name)) return Promise.reject('noFieldName')
+  // Comprobar si existe remote collection
     const firstNullState = module.exports.firstNullState(data)
     let state = {}
     if (firstNullState !== undefined) {
@@ -51,7 +52,7 @@ module.exports = {
   },
   hidrate: (type, ele) => {
     return dbLib.get()
-      .then((db) => Promise.all([col(db).find({remote_id: ele.id, remote_collection: type}).toArray(),col(db).find({remote_id: ele.id, remote_collection: type, prev_state_id: null }).toArray()])
+      .then((db) => Promise.all([col(db).find({remote_id: ele.id, remote_collection: type}).toArray(),col(db).find({remote_id: ele.id, remote_collection: type, prev_state_id: null }).toArray()]))
       .then(([everyState,allFirstStates]) => {
         const fullStates = allFirstStates.map((ele) => {
           return util.nextStates(ele, everyState)
@@ -81,8 +82,10 @@ module.exports = {
   // },
 
   firstNullState: (data) => {
-    return collection.find(state => (state.remote_id === data.remote_id && state.remote_collection === data.remote_collection &&
-      state.field_name === data.field_name && state.prev_state_id === null))
+    return dbLib.get()
+      .then((db) => col(db).find({remote_id: data.remote_id, remote_collection: data.remote_collection, field_name: data.field_name, prev_state_id: null}))
+    // return collection.find(state => (state.remote_id === data.remote_id && state.remote_collection === data.remote_collection &&
+    //   state.field_name === data.field_name && state.prev_state_id === null))
   },
   __emptyCollection__:() => {
     return dbLib.get()
