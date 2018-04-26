@@ -20,7 +20,7 @@ const should = chai.should()
 */
 describe('/POST user', () => {
   beforeEach((done) => {
-    User.__emptyUsers__()
+    User.__emptyCollection__()
       .then(() => done())
       .catch(done)
   })
@@ -118,7 +118,7 @@ describe('/POST user', () => {
 */
 describe('/GET  user', () => {
   beforeEach((done) => {
-    User.__emptyUsers__()
+    User.__emptyCollection__()
       .then(() => done())
       .catch(done)
   })
@@ -275,7 +275,7 @@ describe('/GET  user', () => {
 */
 describe('/GET/:id user', () => {
   beforeEach((done) => {
-    User.__emptyUsers__()
+    User.__emptyCollection__()
       .then(() => done())
       .catch(done)
   })
@@ -306,7 +306,7 @@ describe('/GET/:id user', () => {
 */
 describe('/DELETE  user', () => {
   beforeEach((done) => {
-    User.__emptyUsers__()
+    User.__emptyCollection__()
       .then(() => done())
       .catch(done)
   })
@@ -364,7 +364,7 @@ describe('/DELETE  user', () => {
 */
 describe('/PATCH/:id user', () => {
   beforeEach(function setUp(done) {
-    User.__emptyUsers__()
+    User.__emptyCollection__()
       .then(() => done())
       .catch(done)
   })

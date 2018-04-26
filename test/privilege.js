@@ -13,7 +13,7 @@ chai.use(chaiThings)
 
 describe('Checking the privileges', () => {
   beforeEach((done) => {
-    User.__emptyUsers__()
+    User.__emptyCollection__()
       .then(() => done())
       .catch(done)
   })

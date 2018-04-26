@@ -13,7 +13,7 @@ chai.should()
 */
 describe('/POST session', () => {
   beforeEach((done) => {
-    User.__emptyUsers__()
+    User.__emptyCollection__()
       .then(() => done())
   })
 

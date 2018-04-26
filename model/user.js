@@ -22,7 +22,7 @@ module.exports = {
         return dbLib.get()
       })
       .then((db) => col(db).insertOne(util.prepareData(user, attrsUser))
-      .then(() => col(db).find().toArray()))
+        .then(() => col(db).find().toArray()))
   },
   getAll: (filters) => {
     return dbLib.get()
@@ -66,17 +66,17 @@ module.exports = {
   },
   authenticate: (name, password) => {
     return dbLib.get()
-      .then((db) => {
-        return col(db).find({ name: name, password: password }).limit(1).toArray().then((user) => {
-          if (user.length !== 1) return Promise.reject('incorrectLogin')
-          return Promise.resolve(user[0])
-        })
+      .then((db) => col(db).find({ name: name, password: password }).limit(1).toArray())
+      .then((user) => {
+        console.log('aqui estoyy')
+        if (user.length !== 1) return Promise.reject('incorrectLogin')
+        return Promise.resolve(user[0])
       })
   },
   findByAttr: (attr, value) => {
     return util.findByAttr('users', attr, value)
   },
-  __emptyUsers__: () => {
+  __emptyCollection__: () => {
     return dbLib.get()
       .then((db) => col(db).remove({ role: { $ne: 'root' } }))
   }

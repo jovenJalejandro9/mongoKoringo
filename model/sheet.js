@@ -113,8 +113,8 @@ module.exports = {
     .then(sheetsFiltered => Promise.resolve(sheetsFiltered.map(ele => ele.id)))
   },
   __emptyCollection__: () => {
-    collection = []
-    return Promise.resolve(collection)
+    return dbLib.get()
+      .then((db) => col(db).remove({}))
   },
   __getCollection__: () => {
     return Promise.resolve(collection)
