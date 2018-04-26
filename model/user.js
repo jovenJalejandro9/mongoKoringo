@@ -3,6 +3,7 @@ const dbLib = require('../lib/db')
 
 const attrsUser = ['name', 'first_surname', 'second_surname', 'nickname', 'password', 'email', 'birthday', 'studies', 'professions', 'prev_volunteering', 'role']
 const col = db => db.collection('users')
+
 module.exports = {
   create: (dataUser) => {
     if (dataUser.hasOwnProperty('role') && (!['admin', 'normal'].includes(dataUser.role))) {

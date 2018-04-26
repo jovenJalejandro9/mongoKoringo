@@ -11,7 +11,6 @@ const fieldNames = ['photos_family',
   'home_own_rent', 'home_material', 'home_facilities', 'home_num_rooms', 'home_numBeds', 'home_forniture', 'home_salubrity',
   'economic_familiar_income', 'economic_external_support', 'economic_feeding_center', 'economic_others',
   'general_information', 'manifested_information', 'detected_information', 'warning_information']
-let collection = [examples.state1, examples.state2, examples.state3]
 
 const col = db => db.collection('states')
 
@@ -66,28 +65,9 @@ module.exports = {
         return Promise.resolve(Object.assign({}, ele, stateValues))
       })
   },
-
-  // hidrate: (type, ele) => {
-  //   const allFirsStates = collection.filter((d) => {
-  //     return (ele.id === d.remote_id &&
-  //       type === d.remote_collection &&
-  //       d.prev_state_id === null)
-  //   })
-  //   const fullStates = allFirsStates.map((ele) => {
-  //     return util.nextStates(ele, collection)
-  //   })
-  //   const stateValues = {}
-  //   for (let i = 0; i < fullStates.length; i++) {
-  //     stateValues[fullStates[i][0].field_name] = fullStates[i]
-  //   }
-  //   return Promise.resolve(Object.assign({}, ele, stateValues))
-  // },
-
   firstNullState: (data) => {
     return dbLib.get()
       .then((db) => col(db).findOne({ remote_id: data.remote_id, remote_collection: data.remote_collection, field_name: data.field_name, prev_state_id: null }))
-    // return collection.find(state => (state.remote_id === data.remote_id && state.remote_collection === data.remote_collection &&
-    //   state.field_name === data.field_name && state.prev_state_id === null))
   },
   findOneState: (prop, filter) => {
     if (prop === null) return false

@@ -1,88 +1,78 @@
 const util = require('../lib/utils')
 const User = require('../model/user')
 const Sheet = require('../model/sheet')
+const dbLib = require('../lib/db')
+
 const attrsVisit = ['sheet_id', 'user_id', 'date', 'state']
-let collection = []
-let idVisit = collection.length
+
+const col = db => db.collection('visits')
+
 module.exports = {
   create: (data) => {
     if (!util.checkFields(attrsVisit.slice(0, -3), data)) {
       return Promise.reject('noInfoCreateVisit')
     }
-    return Sheet
-      .get(data.sheet_id)
-      .then((sheet) => {
-        if (Object.keys(sheet).length === 0) return Promise.reject('noSheet')
-        if (module.exports.checkVisitPending(data.sheet_id) !== undefined) return Promise.reject('existentVisit')
-        const visit = Object.assign({}, data)
-        idVisit++
-        visit.id = idVisit
-        visit.timestamp = util.getDate()
+    const visit = Object.assign({}, data)
+    return dbLib.get()
+      .then((db) => Promise.all([Sheet.get(data.sheet_id), col(db).find({}).toArray(), util.nextId('visits')]))
+      .then(([sheet, visits, nextId]) => {
+        if (sheet === null) return Promise.reject('noSheet')
+        if (module.exports.checkVisitPending(data.sheet_id, visits)) return Promise.reject('existentVisit')
+        console.log('dioss')
+        visit.id = nextId
         visit.state = 'pending'
-        collection.push(util.nullComplete(visit, attrsVisit))
-        return Promise.resolve(collection)
+        return dbLib.get()
       })
+      .then((db) => col(db).insertOne(util.prepareData(visit, attrsVisit)).then(() => col(db).find().toArray()))
   },
   getAll: (filters) => {
     if (Object.keys(filters).length > 0) {
-      return Sheet
-        .getIdswithFilters(filters)
-        .then(idSheets => {
-          const newVisitCollection = collection.filter(visit => {
-            return idSheets.includes(visit.sheet_id)
-          })
-          return Promise.resolve(newVisitCollection)
-        })
+      console.log('me meto en los filtros')
+      return Promise.all([Sheet.getIdswithFilters(filters), dbLib.get()])
+        .then(([idSheets, db]) => col(db).find({ id: { $in: idSheets } }).toArray())
     }
-    return Promise.resolve(collection)
+    return dbLib.get().then((db) => col(db).find().toArray())
   },
   get: (id) => {
-    const visit = collection.find((ele) => {
-      return ele.id === id
-    })
-    if (visit === undefined) return Promise.resolve({})
-    return Promise.resolve(visit)
+    return dbLib.get()
+      .then((db) => col(db).findOne({ id: id }))
   },
   updateById: (id, data) => {
-    if (data.hasOwnProperty('state' && data.state !== ('pending' || 'done'))) delete data.state
-    return User
-      .get(data.user_id)
-      .then((user) => {
-        if (Object.keys(user).length === 0 && data.hasOwnProperty('user_id')) return Promise.reject('noUser')
-        return Sheet
-          .get(data.sheet_id)
-          .then((sheet) => {
-            if (Object.keys(sheet).length === 0 && data.hasOwnProperty('sheet_id')) return Promise.reject('noUser')
-            if (module.exports.checkVisitPending(data.sheet_id) !== undefined) return Promise.reject('existentVisit')
-            return util
-              .findByAttr(collection, 'id', id)
-              .then(ele => util.merge(ele, data))
-              .then(newEle => util.replace(collection, id, newEle))
-              .then((newcollection) => {
-                collection = newcollection
-                return newcollection
-              })
+    if (data.hasOwnProperty('state') && (!['pending', 'done'].includes(data.state))) delete data.state
+    return dbLib.get()
+      .then((db) => Promise.all([User.get(data.user_id), Sheet.get(data.sheet_id), col(db).find().toArray()]))
+      .then(([user, sheet, visits]) => {
+        if (user === null && data.hasOwnProperty('user_id')) return Promise.reject('noUser')
+        if (sheet == null && data.hasOwnProperty('sheet_id')) return Promise.reject('noSheet')
+        // if (module.exports.checkVisitPending(id, visits) !== undefined) return Promise.reject('existentVisit')
+        console.log(data)
+        return dbLib.get()
+      })
+      .then((db) => {
+        if (Object.keys(data).length === 0) return Promise.resolve(col(db).find().toArray())
+        return col(db).update({ id: id }, { $set: data })
+          .then(() => {
+            return Promise.resolve(col(db).find().toArray())
           })
       })
   },
   removeById: (id) => {
-    collection = collection.filter((ele) => {
-      return ele.id !== id
-    })
-    return Promise.resolve(collection)
+    return dbLib.get()
+      .then((db) => {
+        return col(db).remove({ id: id })
+          .then(() => col(db).find().toArray())
+      })
   },
   findByAttr: (attr, value) => {
     return util.findByAttr(collection, attr, value)
   },
-  checkVisitPending: (sheetId) => {
-    const aux = collection.find((visit) => visit.sheet_id === sheetId && visit.state === 'pending')
-    return aux
+  checkVisitPending: (sheetId, visits) => {
+    const aux = visits.find((visit) => visit.sheet_id === sheetId && visit.state === 'pending')
+    if (aux === undefined) return false
+    return true
   },
   __emptyCollection__: () => {
-    collection = []
-    return Promise.resolve(collection)
-  },
-  __getVisits__: () => {
-    return Promise.resolve(collection)
+    return dbLib.get()
+      .then((db) => col(db).remove({}))
   }
 }
