@@ -68,7 +68,6 @@ module.exports = {
     return dbLib.get()
       .then((db) => col(db).find({ name: name, password: password }).limit(1).toArray())
       .then((user) => {
-        console.log('aqui estoyy')
         if (user.length !== 1) return Promise.reject('incorrectLogin')
         return Promise.resolve(user[0])
       })

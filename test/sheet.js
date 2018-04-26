@@ -179,17 +179,16 @@ describe('/GET/ sheet', () => {
 */
 describe('/GET sheet', () => {
   beforeEach((done) => {
-    Promise.all([State.__emptyCollection__(), Sheet.__emptyCollection__()])
-      .then(Sheet.create(example.sheet1))
-      .then(Sheet.create(example.sheet2))
+    Promise.all([Sheet.__emptyCollection__(), State.__emptyCollection__()])
+      .then(() => Sheet.create(example.sheet1))
+      .then(() => Sheet.create(example.sheet2))
       .then((sheets) => {
         example.state1.remote_id = sheets[0].id
-        example.state2.remote_id = sheets[0].ids
-        return
+        example.state2.remote_id = sheets[0].id
+        return State.create(example.state1)
       })
-      .then(State.create(example.state1))
-      .then(State.create(example.state2))
-      .then(done())
+      .then(() => State.create(example.state2))
+      .then(() => done())
   })
   it('should return an empty json when trying to get a sheet with a wrong id', (done) => {
     chai.request(app)
@@ -198,7 +197,7 @@ describe('/GET sheet', () => {
       .send()
       .end((err, res) => {
         res.should.have.status(200)
-        res.body.should.be.a('object')
+        should.equal(res.body, null)
         done()
       })
   })
@@ -244,8 +243,8 @@ describe('/PATCH sheet', () => {
       .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTIxMDQzMzE5fQ.u25KdsjXHaVU3G3PQgPiFy7KIWbfdIi6NyT6qjIQP3o')
       .send(change)
       .end((err, res) => {
-        res.should.have.status(400)
-        res.body.should.be.a('object')
+        res.should.have.status(200)
+        res.body.should.be.a('array')
         done()
       })
   })
