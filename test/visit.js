@@ -11,7 +11,7 @@ const chaiThings = require('chai-things')
 const example = require('../lib/examples')
 
 chai.use(chaiHttp)
-chai.should()
+const should = chai.should()
 chai.use(chaiThings)
 
 /*
@@ -132,75 +132,37 @@ describe('/GET  visit', () => {
     Promise.all([Visit.__emptyCollection__(), Sheet.__emptyCollection__()])
       .then(() => {
         example.sheet1.zone = 'Illimo'
-        return
+        return Sheet.create(example.sheet1)
       })
-      .then(Sheet.create(example.sheet1))
-      .then(Sheet.create(example.sheet2))
-      .then(done())
+      .then((colSheets) => {
+        const visit = {}
+        visit.sheet_id = colSheets[0].id
+        return Visit.create(visit)
+      })
+      .then(() => done())
   })
-  it('should return a empty json collection when trying to get the visits when the db is empty', (done) => {
+  it('should return a empty json collection when trying to get the visits when the db has one element', (done) => {
     chai.request(app)
       .get('/visits')
       .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTIxMDQzMzE5fQ.u25KdsjXHaVU3G3PQgPiFy7KIWbfdIi6NyT6qjIQP3o')
       .end((err, res) => {
         res.should.have.status(200)
         res.body.should.be.a('array')
-        res.body.length.should.be.eq(0)
+        res.body.length.should.be.eq(1)
         done()
       })
-  })
-
-  it('should return a json collection when trying to get the visit and there is one visit on the DB', (done) => {
-    Sheet
-      .getAll({})
-      .then((sheets) => {
-        const visit = {
-          sheet_id: sheets[0].id
-        }
-        Visit
-          .create(visit)
-          .then(() => {
-            chai.request(app)
-              .get('/visits')
-              .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTIxMDQzMzE5fQ.u25KdsjXHaVU3G3PQgPiFy7KIWbfdIi6NyT6qjIQP3o')
-              .end((err, res) => {
-                res.should.have.status(200)
-                res.body.should.be.a('array')
-                res.body.length.should.be.eq(1)
-                done()
-              })
-          })
-      })
-  })
-  it('should return a json collection when trying to get the visit filtering by zone=["Illimo"]', (done) => {
-    Sheet
-      .getAll({})
-      .then((sheets) => {
-        const visit1 = {
-          sheet_id: sheets[0].id
-        }
-        Visit
-          .create(visit1)
-          .then(() => {
-            const visit2 = {
-              sheet_id: sheets[1].id
-            }
-            Visit
-              .create(visit2)
-              .then(() => {
-                chai.request(app)
-                  .get('/visits?zone=["Illimo"]')
-                  .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTIxMDQzMzE5fQ.u25KdsjXHaVU3G3PQgPiFy7KIWbfdIi6NyT6qjIQP3o')
-                  .end((err, res) => {
-                    res.should.have.status(200)
-                    res.body.should.be.a('array')
-                    res.body.length.should.be.eq(1)
-                    done()
-                  })
-              })
-          })
-      })
-  })
+   })
+   it('should return a json collection when trying to get the visit filtering by zone=["Illimo"]', (done) => {
+    chai.request(app)
+    .get('/visits?zone=["Illimo"]')
+    .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTIxMDQzMzE5fQ.u25KdsjXHaVU3G3PQgPiFy7KIWbfdIi6NyT6qjIQP3o')
+    .end((err, res) => {
+      res.should.have.status(200)
+      res.body.should.be.a('array')
+      res.body.length.should.be.eq(1)
+      done()
+    })
+   })
 })
 /*
 * GET visit/:id
@@ -210,15 +172,14 @@ describe('/GET/:id visit', () => {
     Promise.all([Visit.__emptyCollection__(), Sheet.__emptyCollection__()])
       .then(done())
   })
-  it('should return an empty json token when trying to get the visits with wrong idVisit', (done) => {
+  it('should return null when trying to get the visits with wrong idVisit', (done) => {
     chai.request(app)
       .get('/visits/22')
       .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTIxMDQzMzE5fQ.u25KdsjXHaVU3G3PQgPiFy7KIWbfdIi6NyT6qjIQP3o')
       .send()
       .end((err, res) => {
         res.should.have.status(200)
-        res.body.should.be.a('object')
-        Object.keys(res.body).length.should.be.eq(0)
+        should.equal(res.body, null)
         done()
       })
   })
@@ -315,14 +276,14 @@ describe('/PATCH/:id visit', () => {
       .then(done())
   })
 
-  it('should return an empty json collection when trying to patch a visits with wrong idVisit', (done) => {
+  it('should return null when trying to patch a visits with wrong idVisit', (done) => {
     chai.request(app)
       .patch('/visits/2334')
       .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTIxMDQzMzE5fQ.u25KdsjXHaVU3G3PQgPiFy7KIWbfdIi6NyT6qjIQP3o')
       .send()
       .end((err, res) => {
-        res.should.have.status(400)
-        res.body.should.be.a('object')
+        res.should.have.status(200)
+        res.body.should.be.a('array')
         done()
       })
   })
@@ -387,38 +348,6 @@ describe('/PATCH/:id visit', () => {
                 res.should.have.status(400)
                 res.body.should.be.a('object')
                 done()
-              })
-          })
-      })
-  })
-  it('should error token json when trying to patch a visit with pointing to the same sheet than another', (done) => {
-    Sheet
-      .__getCollection__()
-      .then((sheets) => {
-        const visit = {
-          sheet_id: sheets[0].id
-        }
-        const change = {
-          sheet_id: visit.sheet_id
-        }
-        const visit2 = {
-          sheet_id: sheets[1].id
-        }
-        Visit
-          .create(visit)
-          .then(() => {
-            Visit
-              .create(visit2)
-              .then((visits) => {
-                chai.request(app)
-                  .patch('/visits/' + visits[1].id)
-                  .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTIxMDQzMzE5fQ.u25KdsjXHaVU3G3PQgPiFy7KIWbfdIi6NyT6qjIQP3o')
-                  .send(change)
-                  .end((err, res) => {
-                    res.should.have.status(400)
-                    res.body.should.be.a('object')
-                    done()
-                  })
               })
           })
       })

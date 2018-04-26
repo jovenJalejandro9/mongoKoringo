@@ -29,6 +29,7 @@ module.exports = {
         if (!util.checkFields(compAttrSheet, data)) {
           return Promise.reject('noInfoCreateSheet')
         }
+        sheet.id = nextId
         return dbLib.get()
       })
       .then((db) => {
@@ -117,6 +118,7 @@ module.exports = {
       .then((db) => col(db).remove({}))
   },
   __getCollection__: () => {
-    return Promise.resolve(collection)
+    return dbLib.get()
+      .then((db) => col(db).find().toArray())
   }
 }

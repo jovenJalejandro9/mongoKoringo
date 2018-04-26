@@ -18,7 +18,6 @@ module.exports = {
       .then(([sheet, visits, nextId]) => {
         if (sheet === null) return Promise.reject('noSheet')
         if (module.exports.checkVisitPending(data.sheet_id, visits)) return Promise.reject('existentVisit')
-        console.log('dioss')
         visit.id = nextId
         visit.state = 'pending'
         return dbLib.get()
@@ -27,7 +26,6 @@ module.exports = {
   },
   getAll: (filters) => {
     if (Object.keys(filters).length > 0) {
-      console.log('me meto en los filtros')
       return Promise.all([Sheet.getIdswithFilters(filters), dbLib.get()])
         .then(([idSheets, db]) => col(db).find({ id: { $in: idSheets } }).toArray())
     }
@@ -45,7 +43,6 @@ module.exports = {
         if (user === null && data.hasOwnProperty('user_id')) return Promise.reject('noUser')
         if (sheet == null && data.hasOwnProperty('sheet_id')) return Promise.reject('noSheet')
         // if (module.exports.checkVisitPending(id, visits) !== undefined) return Promise.reject('existentVisit')
-        console.log(data)
         return dbLib.get()
       })
       .then((db) => {
