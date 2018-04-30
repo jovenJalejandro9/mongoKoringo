@@ -12,7 +12,7 @@ exports.create = (req, res) => {
     .create(visitData)
     .then((result) => res.status(201).json(result))
     .catch((err) => res.status(400).send(error[err]()))
-}
+  }
 exports.getAll = (req, res) => {
   const params = util.pick(req.query, attrParams)
   Visit

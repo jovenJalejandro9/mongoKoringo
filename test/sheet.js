@@ -24,6 +24,7 @@ describe('/POST sheet', () => {
   beforeEach((done) => {
     Promise.all([Sheet.__emptyCollection__(), State.__emptyCollection__()])
       .then(Sheet.create(example.sheet1))
+      .then(Sheet.getAll({}))
       .then(() => done())
   })
 

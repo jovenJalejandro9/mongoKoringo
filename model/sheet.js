@@ -42,9 +42,9 @@ module.exports = {
   },
   getAll: (filters) => {
     return dbLib.get()
-      .then((db) => col(db).find({}).toArray())
-      .then((sheetCollection) => Promise.all(sheetCollection.map(sheet => State.hidrate('sheet', sheet))))
-      .then((everySheet) => {
+    .then((db) => col(db).find({}).toArray())
+    .then((sheetCollection) => Promise.all(sheetCollection.map(sheet => State.hidrate('sheet', sheet))))
+    .then((everySheet) => {
         if (Object.keys(filters).length > 0) {
           const keysFilter = Object.keys(filters)
           const newSheetColl = everySheet.filter((sheet) => {

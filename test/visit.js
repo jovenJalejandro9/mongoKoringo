@@ -151,18 +151,18 @@ describe('/GET  visit', () => {
         res.body.length.should.be.eq(1)
         done()
       })
-   })
-   it('should return a json collection when trying to get the visit filtering by zone=["Illimo"]', (done) => {
+  })
+  it('should return a json collection when trying to get the visit filtering by zone=["Illimo"]', (done) => {
     chai.request(app)
-    .get('/visits?zone=["Illimo"]')
-    .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTIxMDQzMzE5fQ.u25KdsjXHaVU3G3PQgPiFy7KIWbfdIi6NyT6qjIQP3o')
-    .end((err, res) => {
-      res.should.have.status(200)
-      res.body.should.be.a('array')
-      res.body.length.should.be.eq(1)
-      done()
-    })
-   })
+      .get('/visits?zone=["Illimo"]')
+      .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTIxMDQzMzE5fQ.u25KdsjXHaVU3G3PQgPiFy7KIWbfdIi6NyT6qjIQP3o')
+      .end((err, res) => {
+        res.should.have.status(200)
+        res.body.should.be.a('array')
+        res.body.length.should.be.eq(1)
+        done()
+      })
+  })
 })
 /*
 * GET visit/:id
@@ -271,9 +271,8 @@ describe('/DELETE  visit', () => {
 describe('/PATCH/:id visit', () => {
   beforeEach((done) => {
     Promise.all([Visit.__emptyCollection__(), Sheet.__emptyCollection__()])
-      .then(Sheet.create(example.sheet1))
-      .then(Sheet.create(example.sheet2))
-      .then(done())
+      .then(([emptyVisits, emtySheets]) => Promise.all([Sheet.create(example.sheet1), Sheet.create(example.sheet2)]))
+      .then(() => done())
   })
 
   it('should return null when trying to patch a visits with wrong idVisit', (done) => {
