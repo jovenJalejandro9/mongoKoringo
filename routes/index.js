@@ -10,13 +10,13 @@ module.exports = function routes(router) {
   // Session group
   router.post('/session', Session.createToken)
   // User Group
-  router.post('/users', middleware.isAuthenticated, middleware.hasPrivileges, UserController.create)
+  router.post('/users',middleware.isAuthenticated, middleware.hasPrivileges,UserController.create)
   router.get('/users', middleware.isAuthenticated, UserController.getAll)
   router.get('/users/:id', middleware.isAuthenticated, UserController.get)
   router.patch('/users/:id', middleware.isAuthenticated, middleware.hasPrivileges, UserController.update)
   router.delete('/users/:id', middleware.isAuthenticated, middleware.hasPrivileges, UserController.delete)
   // Visit Group
-  router.post('/visits', middleware.isAuthenticated, VisitController.create)
+  router.post('/visits', VisitController.create)
   router.get('/visits', middleware.isAuthenticated, VisitController.getAll)
   router.get('/visits/:id', middleware.isAuthenticated, VisitController.get)
   router.patch('/visits/:id', middleware.isAuthenticated, VisitController.update)

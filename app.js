@@ -4,7 +4,7 @@ const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 const dbLib = require('./lib/db')
 const config = require('./lib/config')
-
+const cors = require('cors')
 const app = express()
 const router = express.Router()
 
@@ -15,6 +15,11 @@ router.use(bodyParser.urlencoded({ extended: false }))
 router.use(cookieParser())
 
 require('./routes/index')(router)
+// app.use(cors())
+
+// app.get('/users', function (req, res, next) {
+//   res.json({msg: 'Aqui estan los users'})
+// })
 
 router.use((req, res, next) => {
   const err = new Error('Not Found')
@@ -24,7 +29,7 @@ router.use((req, res, next) => {
 
 dbLib.connect(config.urlDb)
   .then(() => {
-    app.listen(3000)
+    app.listen(5000)
   })
 //  que hago con el console?? a eslint no le mola mucho
   .catch(console.log)

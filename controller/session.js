@@ -12,7 +12,7 @@ exports.createToken = (req, res) => {
   User
     .authenticate(req.body.name, password)
     .then((user) => {
-  	res.json({token: jwt.sign({id: user.id}, config.secretKey)})
+  	  res.json({token: jwt.sign({id: user.id}, config.secretKey), role: user.role, name: user.name})
     })
     .catch((err) => res.status(401).send(error[err]()))
 }
