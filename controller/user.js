@@ -3,9 +3,8 @@ const User = require('../model/user')
 const util = require('../lib/utils')
 
 const crypto = require('crypto')
-
-// const attrsUser = ['name', 'first_surname', 'second_surname', 'nickname', 'password', 'email', 'birthday', 'studies', 'professions', 'prev_volunteering', 'role']
-const attrsUser = ['name']
+ 
+const attrsUser = ['name', 'first_surname','address', 'tel', 'second_surname', 'nickname', 'password', 'email', 'birthday', 'studies', 'professions', 'prev_volunteering']
 const attrParams = ['professions', 'studies']
 
 exports.create = (req, res) => {
@@ -33,7 +32,7 @@ exports.get = (req, res) => {
 }
 
 exports.update = (req, res) => {
-  const userData = util.pick(req.body, attrsUser)
+  const userData = util.pick(req.body, [...attrsUser,'addres', 'role'])
   User
     .updateById(parseInt(req.params.id, 10), userData)
     .then((result) => res.status(200).json(result))

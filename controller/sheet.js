@@ -8,10 +8,11 @@ const attrParams = ['name', 'first_surname', 'zone', 'address', 'second_surname'
   'medical_tests', 'medical_treatment', 'home_own_rent', 'home_material', 'economic_familiar_income', 'economic_external_support']
 
 
-const normalAttrsSheet = ['name', 'first_surname', 'zone', 'address', 'second_surname', 'birthday', 'id_number', 'complete']
+const compulsoryFields = ['name', 'first_surname', 'zone', 'address', 'second_surname', 'birthday', 'id_number', 'complete']
+const otherFields = ['lat', 'long', 'complete', 'sponsored']
 
 exports.create = (req, res) => {
-  const sheetData = util.pick(req.body, normalAttrsSheet.slice(0, -1))
+  const sheetData = util.pick(req.body, compulsoryFields.slice(0, -1))
   Sheet
     .create(sheetData)
     .then((result) => res.status(201).json(result))
@@ -34,7 +35,7 @@ exports.get = (req, res) => {
 }
 
 exports.update = (req, res) => {
-  const sheetData = util.pick(req.body, normalAttrsSheet)
+  const sheetData = util.pick(req.body, [...compulsoryFields,...otherFields])
   Sheet
     .updateById(parseInt(req.params.id, 10), sheetData)
     .then((result) => res.status(200).json(result))
