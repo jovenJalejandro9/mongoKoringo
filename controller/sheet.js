@@ -3,12 +3,11 @@ const error = require('../lib/error')
 const util = require('../lib/utils')
 const Sheet = require('../model/sheet')
 
-const attrParams = ['name', 'first_surname', 'zone', 'address', 'second_surname', 'birthday', 'id_number', 'complete', 'family_inCharge', 'family_information', 'education_center',
+const attrParams = ['name', 'first_surname','tel', 'zone', 'address', 'second_surname', 'birthday', 'id_number', 'complete', 'family_inCharge', 'family_information', 'education_center',
   'medical_therapies', 'medical_diagnose', 'medical_mobility', 'medical_wheel_chair', 'medical_comunication',
   'medical_tests', 'medical_treatment', 'home_own_rent', 'home_material', 'economic_familiar_income', 'economic_external_support']
-
-
-const compulsoryFields = ['name', 'first_surname', 'zone', 'address', 'second_surname', 'birthday', 'id_number', 'complete']
+  
+const compulsoryFields = ['name','tel', 'first_surname', 'zone', 'address', 'second_surname', 'birthday', 'id_number', 'complete']
 const otherFields = ['lat', 'long', 'complete', 'sponsored']
 
 exports.create = (req, res) => {

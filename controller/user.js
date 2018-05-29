@@ -4,7 +4,7 @@ const util = require('../lib/utils')
 
 const crypto = require('crypto')
  
-const attrsUser = ['name', 'first_surname','address', 'tel', 'second_surname', 'nickname', 'password', 'email', 'birthday', 'studies', 'professions', 'prev_volunteering']
+const attrsUser = ['name', 'first_surname','address', 'tel', 'second_surname', 'nickname', 'password', 'email', 'birthday', 'studies', 'professions', 'prev_volunteering', 'drive', 'food', 'english', 'speak', 'addres', 'role']
 const attrParams = ['professions', 'studies']
 
 exports.create = (req, res) => {
@@ -32,7 +32,7 @@ exports.get = (req, res) => {
 }
 
 exports.update = (req, res) => {
-  const userData = util.pick(req.body, [...attrsUser,'addres', 'role'])
+  const userData = util.pick(req.body, attrsUser)
   User
     .updateById(parseInt(req.params.id, 10), userData)
     .then((result) => res.status(200).json(result))

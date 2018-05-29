@@ -2,6 +2,7 @@ const util = require('../lib/utils')
 const dbLib = require('../lib/db')
 
 const attrsUser = ['name', 'first_surname', 'second_surname','tel', 'nickname', 'password', 'email', 'birthday', 'studies', 'professions', 'prev_volunteering']
+const OtherAttrUser = ['address', 'role', 'drive', 'speak', 'english', 'food']
 const col = db => db.collection('users')
 
 module.exports = {
@@ -21,7 +22,7 @@ module.exports = {
         user.id = nextId
         return dbLib.get()
       })
-      .then((db) => col(db).insertOne(util.prepareData(user, [...attrsUser,'address', 'role']))
+      .then((db) => col(db).insertOne(util.prepareData(user, [...attrsUser,...OtherAttrUser]))
         .then(() => col(db).find().toArray()))
   },
   getAll: (filters) => {
