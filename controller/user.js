@@ -4,11 +4,11 @@ const util = require('../lib/utils')
 
 const crypto = require('crypto')
  
-const attrsUser = ['name', 'first_surname','address', 'tel', 'second_surname', 'nickname', 'password', 'email', 'birthday', 'studies', 'professions', 'prev_volunteering', 'drive', 'food', 'english', 'speak', 'addres', 'role']
-const attrParams = ['professions', 'studies', 'drive']
+const attrsUser = ['name', 'first_surname','address', 'tel', 'second_surname', 'nickname', 'password', 'email', 'birthday', 'studies', 'drive', 'food', 'english', 'speak', 'addres', 'role']
+const attrParams = ['professions', 'studies', 'drive', 'food', 'english', 'speak', 'trip']
 
 exports.create = (req, res) => {
-  const userData = util.pick(req.body, attrsUser)
+  const userData = util.pick(req.body, [...attrsUser, ... attrParams])
   userData.password = crypto.createHash('md5').update(req.body.password).digest('hex')
   User
     .create(userData)
@@ -32,7 +32,7 @@ exports.get = (req, res) => {
 }
 
 exports.update = (req, res) => {
-  const userData = util.pick(req.body, attrsUser)
+  const userData = util.pick(req.body, [...attrsUser, ... attrParams])
   User
     .updateById(parseInt(req.params.id, 10), userData)
     .then((result) => res.status(200).json(result))
