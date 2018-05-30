@@ -34,9 +34,14 @@ module.exports = {
           keysFilters = Object.keys(filters)
           for (let i = 0; i < keysFilters.length; i++) {
             const or = {}
-            or[keysFilters[i]] = { $in: JSON.parse(filters[keysFilters[i]]) }
+            if(Array.isArray(filters[keysFilters[i]])){
+              or[keysFilters[i]] = { $in: JSON.parse(filters[keysFilters[i]]) }
+            } else {
+              or[keysFilters[i]] = JSON.parse(filters[keysFilters[i]])
+            }
             filtersMongo.$or.push(or)
           }
+          console.log(filtersMongo)
         }
         return col(db).find(filtersMongo).toArray()
       })

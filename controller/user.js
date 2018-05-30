@@ -5,7 +5,7 @@ const util = require('../lib/utils')
 const crypto = require('crypto')
  
 const attrsUser = ['name', 'first_surname','address', 'tel', 'second_surname', 'nickname', 'password', 'email', 'birthday', 'studies', 'professions', 'prev_volunteering', 'drive', 'food', 'english', 'speak', 'addres', 'role']
-const attrParams = ['professions', 'studies']
+const attrParams = ['professions', 'studies', 'drive']
 
 exports.create = (req, res) => {
   const userData = util.pick(req.body, attrsUser)
