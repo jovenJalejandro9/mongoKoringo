@@ -76,6 +76,7 @@ module.exports = {
       })
   },
   updateById: (id, data) => {
+    console.log(data)
     return dbLib.get()
       .then((db) => {
         if(Object.keys(data).length === 0) return Promise.resolve(col(db).find().toArray())

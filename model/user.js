@@ -1,8 +1,8 @@
 const util = require('../lib/utils')
 const dbLib = require('../lib/db')
 
-const attrsUser = ['name', 'first_surname', 'second_surname','tel', 'nickname', 'password', 'email', 'birthday', 'studies', 'professions', 'prev_volunteering']
-const OtherAttrUser = ['address', 'role', 'drive', 'speak', 'english', 'food']
+const compAttrsUser = ['name', 'first_surname','tel', 'nickname', 'password', 'email', 'birthday', 'studies', 'profession', 'prev_professions', 'prev_volunteering']
+const OtherAttrUser = ['address', 'role', 'second_surname', 'drive', 'speak', 'english', 'food']
 const col = db => db.collection('users')
 
 module.exports = {
@@ -10,7 +10,7 @@ module.exports = {
     if (dataUser.hasOwnProperty('role') && (!['admin', 'normal'].includes(dataUser.role))) {
       return Promise.reject('incorrectRole')
     }
-    if (!util.checkFields(attrsUser, dataUser)) {
+    if (!util.checkFields(compAttrsUser, dataUser)) {
       return Promise.reject('noInfoCreateUser')
     }
     const user = Object.assign({}, dataUser)
@@ -22,7 +22,7 @@ module.exports = {
         user.id = nextId
         return dbLib.get()
       })
-      .then((db) => col(db).insertOne(util.prepareData(user, [...attrsUser,...OtherAttrUser]))
+      .then((db) => col(db).insertOne(util.prepareData(user, [...compAttrsUser,...OtherAttrUser]))
         .then(() => col(db).find().toArray()))
   },
   getAll: (filters) => {
