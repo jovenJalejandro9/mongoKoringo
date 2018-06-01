@@ -12,7 +12,7 @@ const attrsSheet = ['second_surname', 'birthday', 'id_number', 'photos_family',
   'medical_diagnose', 'medical_mobility', 'medical_wheel_chair', 'medical_comunication', 'medical_tests', 'medical_treatment', 'medical_relative_disease',
   'home_own_rent', 'home_material', 'home_facilities', 'home_num_rooms', 'home_numBeds', 'home_forniture', 'home_salubrity',
   'economic_familiar_income', 'economic_external_support', 'economic_feeding_center', 'economic_others',
-  'general_information', 'manifested_information', 'detected_information', 'warning_information', 'complete']
+  'general_information', 'manifested_information', 'detected_information', 'warning_information', 'complete', 'urgent_comment', 'important_comment','money_comment', 'noSponsored', 'wheel_chair']
 
 const col = db => db.collection('sheets')
 
