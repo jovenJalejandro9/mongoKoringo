@@ -7,7 +7,8 @@ const attrParams = ['name', 'first_surname','tel', 'zone', 'address', 'second_su
   'medical_therapies', 'medical_diagnose', 'medical_mobility', 'medical_wheel_chair', 'medical_comunication',
   'medical_tests', 'medical_treatment', 'home_own_rent', 'home_material', 'economic_familiar_income', 'economic_external_support']
   
-const compFields = ['name','tel', 'first_surname', 'zone', 'address', 'second_surname', 'birthday', 'id_number', 'complete', 'urgent_comment', 'important_comment','money_comment', 'noSponsored', 'wheel_chair' ]
+const compFields = ['name','tel', 'first_surname', 'zone', 'address', 'second_surname', 'birthday', 'id_number', 'complete', 'urgent_comment', 'important_comment','money_comment',
+ 'noSponsored', 'wheel_chair' ]
 const otherFields = ['lat', 'long', 'complete']
 
 exports.create = (req, res) => {
