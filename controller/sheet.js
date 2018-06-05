@@ -3,16 +3,16 @@ const error = require('../lib/error')
 const util = require('../lib/utils')
 const Sheet = require('../model/sheet')
 
-const attrParams = ['name', 'first_surname','tel', 'zone', 'address', 'second_surname', 'birthday', 'id_number', 'complete', 'family_inCharge', 'family_information', 'education_center',
+const attrParams = ['name', 'first_surname','tel', 'zone', 'address', 'email', 'second_surname', 'birthday', 'id_number', 'complete', 'family_in_charge', 'family_relation', 'family_information', 'education_center',
   'medical_therapies', 'medical_diagnose', 'medical_mobility', 'medical_wheel_chair', 'medical_comunication',
   'medical_tests', 'medical_treatment', 'home_own_rent', 'home_material', 'economic_familiar_income', 'economic_external_support']
   
-const compFields = ['name','tel', 'first_surname', 'zone', 'address', 'second_surname', 'birthday', 'id_number', 'complete', 'urgent_comment', 'important_comment','money_comment',
- 'noSponsored', 'wheel_chair' ]
+const normalFields = ['name','tel', 'first_surname','zone', 'address', 'second_surname', 'birthday', 'id_number', 'complete', 'urgent_comment', 'important_comment','money_comment',
+ 'no_sponsored', 'wheel_chair', 'carer_user', 'relationship']
 const otherFields = ['lat', 'long', 'complete']
 
 exports.create = (req, res) => {
-  const sheetData = util.pick(req.body, compFields)
+  const sheetData = util.pick(req.body, normalFields)
   Sheet
     .create(sheetData)
     .then((result) => res.status(201).json(result))
@@ -35,7 +35,7 @@ exports.get = (req, res) => {
 }
 
 exports.update = (req, res) => {
-  const sheetData = util.pick(req.body, [...compFields,...otherFields])
+  const sheetData = util.pick(req.body, [...normalFields,...otherFields])
   Sheet
     .updateById(parseInt(req.params.id, 10), sheetData)
     .then((result) => res.status(200).json(result))
