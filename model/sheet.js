@@ -8,7 +8,7 @@ const filterStates = ['family_inCharge', 'family_information', 'education_center
   'medical_tests', 'medical_treatment', 'home_own_rent', 'home_material', 'economic_familiar_income', 'economic_external_support']
 const compAttrSheet = ['name', 'first_surname', 'zone', 'address']
 const otherAttrs = ['second_surname', 'birthday', 'id_number', 'photos_family',
-  'photos_house', 'family_inCharge', 'family_information','education', 'family', 'economy', 'home', 'social',
+  'photos_house', 'family_inCharge','family_inCharge_name', 'family_information','education', 'family', 'economy', 'home', 'social',
   'general_information', 'manifested_information', 'detected_information', 'warning_information', 'complete', 'urgent_comment', 'important_comment','money_comment', 'no_Sponsored', 'wheel_chair']
 const attrsSheet = ['second_surname', 'birthday', 'id_number', 'photos_family',
   'photos_house', 'family_inCharge', 'family_information', 'education_center', 'social_situation', 'medical_therapies',
