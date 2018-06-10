@@ -5,12 +5,13 @@ const dbLib = require('../lib/db')
 
 const attrsState = ['prev_state_id', 'value', 'user_id', 'remote_id', 'remote_collection', 'field_name']
 const remoteCollection = ['sheet']
-const fieldNames = ['photos_family',
-  'photos_house', 'family_inCharge', 'family_information', 'education_center', 'social_situation', 'medical_therapies',
-  'medical_diagnose', 'medical_mobility', 'medical_wheel_chair', 'medical_comunication', 'medical_tests', 'medical_treatment', 'medical_relative_disease',
-  'home_own_rent', 'home_material', 'home_facilities', 'home_num_rooms', 'home_numBeds', 'home_forniture', 'home_salubrity',
-  'economic_familiar_income', 'economic_external_support', 'economic_feeding_center', 'economic_others',
-  'general_information', 'manifested_information', 'detected_information', 'warning_information']
+// const fieldNames = ['photos_family',
+//   'photos_house', 'family_inCharge', 'family_information', 'education_center', 'social_situation', 'medical_therapies',
+//   'medical_diagnose', 'medical_mobility', 'medical_wheel_chair', 'medical_comunication', 'medical_tests', 'medical_treatment', 'medical_relative_disease',
+//   'home_own_rent', 'home_material', 'home_facilities', 'home_num_rooms', 'home_numBeds', 'home_forniture', 'home_salubrity',
+//   'economic_familiar_income', 'economic_external_support', 'economic_feeding_center', 'economic_others',
+//   'general_information', 'manifested_information', 'detected_information', 'warning_information']
+const fieldNames = ['education_information', 'education_information', 'medical_information', 'house_information', 'economic_information', 'ObsGen_information', 'ObsMani_information', 'ObsDet_information']
 
 const col = db => db.collection('states')
 
