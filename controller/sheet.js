@@ -10,6 +10,7 @@ const attrParams = ['name', 'first_surname','tel', 'zone', 'address', 'email', '
 const normalFields = ['name','tel', 'first_surname','zone', 'address', 'second_surname', 'birthday', 'id_number', 'complete', 'urgent_comment', 'important_comment','money_comment',
  'no_sponsored', 'wheel_chair', 'carer_user', 'relationship']
 const otherFields = ['lat', 'long', 'complete']
+const kilomboFields = ['daysNoVisit']
 
 exports.create = (req, res) => {
   const sheetData = util.pick(req.body, normalFields)
@@ -35,7 +36,7 @@ exports.get = (req, res) => {
 }
 
 exports.update = (req, res) => {
-  const sheetData = util.pick(req.body, [...normalFields,...otherFields])
+  const sheetData = util.pick(req.body, [...normalFields,...otherFields, ...kilomboFields])
   Sheet
     .updateById(parseInt(req.params.id, 10), sheetData)
     .then((result) => res.status(200).json(result))

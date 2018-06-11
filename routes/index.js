@@ -31,4 +31,5 @@ module.exports = function routes(router) {
   router.post('/states', middleware.isAuthenticated, StateController.create)
   router.get('/states', middleware.isAuthenticated, StateController.getAll)
   router.get('/states/:id', middleware.isAuthenticated, StateController.get)
+  router.patch('/states/:id', middleware.isAuthenticated, StateController.update)
 }

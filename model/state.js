@@ -11,7 +11,7 @@ const remoteCollection = ['sheet']
 //   'home_own_rent', 'home_material', 'home_facilities', 'home_num_rooms', 'home_numBeds', 'home_forniture', 'home_salubrity',
 //   'economic_familiar_income', 'economic_external_support', 'economic_feeding_center', 'economic_others',
 //   'general_information', 'manifested_information', 'detected_information', 'warning_information']
-const fieldNames = ['education_information', 'education_information', 'medical_information', 'house_information', 'economic_information', 'ObsGen_information', 'ObsMani_information', 'ObsDet_information']
+const fieldNames = ['education_information', 'education_information', 'medical_information', 'house_information', 'economic_information', 'obsGen_information', 'obsMani_information', 'obsDet_information']
 
 const col = db => db.collection('states')
 
@@ -40,6 +40,7 @@ module.exports = {
       .then((nextId) => {
         state = Object.assign({}, data)
         state.id = nextId
+        state.show = true
         return dbLib.get()
       })
     .then((db) => col(db).insertOne(util.prepareData(state, attrsState)).then(() => col(db).find().toArray()))
@@ -47,6 +48,16 @@ module.exports = {
   getAll: () => {
     return dbLib.get()
       .then((db) => col(db).find().toArray())
+  },
+  update: (id, dataState) => {
+    return dbLib.get()
+    .then((db) => {
+      if (Object.keys(dataState).length === 0) return Promise.resolve(col(db).find().toArray())
+      return col(db).update({ id: id }, { $set: dataState })
+        .then(() => {
+          return Promise.resolve(col(db).find().toArray())
+        })
+    })
   },
   get: (id) => {
     return dbLib.get()

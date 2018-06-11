@@ -23,5 +23,13 @@ exports.get = (req, res) => {
   State
     .get(parseInt(req.params.id, 10))
     .then((result) => res.status(200).json(result))
+    .catch((err) => res.status(400).send(error[err]()))   
+}
+exports.update = (req, res) => {
+  const stateData = util.pick(req.body, ['show'])
+  State
+    .update(parseInt(req.params.id, 10), stateData)
+    .then((result) => res.status(200).json(result))
     .catch((err) => res.status(400).send(error[err]()))
+    
 }
