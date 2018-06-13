@@ -71,6 +71,11 @@ module.exports = {
         return Promise.resolve(everySheet)
       })
   },
+  getLocations: () => {
+    return dbLib.get()
+    .then((db) => col(db).find({},{lat:1, long:1, name:1}).toArray())
+    .then((sheetCollection) => Promise.all(sheetCollection.map(sheet => State.hidrate('sheet', sheet))))
+  },
   get: (id) => {
     return dbLib.get()
       .then((db) => col(db).findOne({id: id}))
