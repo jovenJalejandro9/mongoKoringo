@@ -11,7 +11,7 @@ const remoteCollection = ['sheet']
 //   'home_own_rent', 'home_material', 'home_facilities', 'home_num_rooms', 'home_numBeds', 'home_forniture', 'home_salubrity',
 //   'economic_familiar_income', 'economic_external_support', 'economic_feeding_center', 'economic_others',
 //   'general_information', 'manifested_information', 'detected_information', 'warning_information']
-const fieldNames = ['education_information', 'education_information', 'medical_information', 'house_information', 'economic_information', 'obsGen_information', 'obsMani_information', 'obsDet_information']
+const fieldNames = ['education_information', 'education_information', 'social_information', 'medical_information', 'house_information', 'economic_information', 'obsGen_information', 'obsMani_information', 'obsDet_information']
 
 const col = db => db.collection('states')
 
