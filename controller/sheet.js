@@ -8,7 +8,7 @@ const attrParams = ['name', 'first_surname','tel', 'zone', 'address', 'email', '
   'medical_tests', 'medical_treatment', 'home_own_rent', 'home_material', 'economic_familiar_income', 'economic_external_support']
   
 const normalFields = ['name','tel', 'first_surname','zone', 'address', 'second_surname', 'birthday', 'family_information', 'id_number', 'complete', 'urgent_comment', 'important_comment','money_comment',
- 'no_sponsored', 'wheel_chair', 'carer_user', 'relationship']
+ 'no_sponsored', 'wheel_chair', 'carer_user', 'relationship', 'last_visit']
 const otherFields = ['lat', 'long', 'complete']
 const kilomboFields = ['daysNoVisit']
 
