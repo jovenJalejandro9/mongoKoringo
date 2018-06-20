@@ -1,7 +1,7 @@
 const util = require('../lib/utils')
 const dbLib = require('../lib/db')
 
-const compAttrsUser = ['name', 'first_surname','tel', 'nickname', 'password', 'email', 'birthday', 'studies', 'profession', 'prev_professions', 'prev_volunteering']
+const compAttrsUser = ['name', 'first_surname','tel', 'nickname', 'password', 'email', 'birthday', 'studies', 'professions', 'prev_professions', 'prev_volunteering']
 const OtherAttrUser = ['address', 'role', 'second_surname', 'drive', 'speak', 'english', 'food']
 const col = db => db.collection('users')
 
@@ -34,6 +34,7 @@ module.exports = {
           keysFilters = Object.keys(filters)
           for (let i = 0; i < keysFilters.length; i++) {
             const or = {}
+            debugger
             if(Array.isArray(filters[keysFilters[i]])){
               or[keysFilters[i]] = { $in: JSON.parse(filters[keysFilters[i]]) }
             } else {
@@ -41,7 +42,6 @@ module.exports = {
             }
             filtersMongo.$or.push(or)
           }
-          console.log(filtersMongo)
         }
         return col(db).find(filtersMongo).toArray()
       })

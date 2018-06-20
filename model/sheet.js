@@ -3,9 +3,7 @@ const State = require('../model/state')
 const examples = require('../lib/examples')
 const dbLib = require('../lib/db')
 
-const filterStates = ['family_inCharge', 'family_information', 'education_center',
-  'medical_therapies', 'medical_diagnose', 'medical_mobility', 'medical_wheel_chair', 'medical_comunication',
-  'medical_tests', 'medical_treatment', 'home_own_rent', 'home_material', 'economic_familiar_income', 'economic_external_support']
+const filterStates = ['medical_information']
 const compAttrSheet = ['name', 'first_surname', 'zone', 'address', 'tel', 'carer_user']
 const otherAttrs = ['second_surname', 'birthday', 'id_number','education_information', 'education_information', 'medical_information', 
   'house_information', 'economic_information', 'obsGen_information', 'obsMani_information', 'obsDet_information']
@@ -31,6 +29,7 @@ module.exports = {
           return Promise.reject('noInfoCreateSheet')
         }
         sheet.id = nextId
+        sheet.score_aux = 0
         return dbLib.get()
       })
       .then((db) => {
@@ -45,26 +44,49 @@ module.exports = {
     .then((db) => col(db).find({}).toArray())
     .then((sheetCollection) => Promise.all(sheetCollection.map(sheet => State.hidrate('sheet', sheet))))
     .then((everySheet) => {
-        if (Object.keys(filters).length > 0) {
-          const keysFilter = Object.keys(filters)
-          const newSheetColl = everySheet.filter((sheet) => {
-            for (let i = 0; i < keysFilter.length; i++) {
-              const filterValues = JSON.parse(filters[keysFilter[i]])
-              if (filterStates.includes(keysFilter[i])) {
-                if (State.findOneState(sheet[keysFilter[i]], filterValues)) {
-                  return sheet
-                }
-              } else {
-                if (util.findOne(sheet[keysFilter[i]], filterValues)) {
-                  return sheet
-                }
+      if (Object.keys(filters).length > 0) {
+        const keysFilter = Object.keys(filters)
+        const newSheetColl = everySheet.filter((sheet) => {
+          for (let filterKey of keysFilter) { 
+            if(compAttrSheet.includes(filterKey)){
+              console.log('URL: '+filters[filterKey])
+              console.log(sheet[filterKey])
+              console.log('----')
+              if (filters[filterKey] === sheet[filterKey]){
+                return sheet
+              }
+            } if (filterStates.includes(filterKey)) { 
+              if (false) { 
+                return sheet
               }
             }
-            return null
-          })
-          return Promise.resolve(newSheetColl)
-        }
+          }
+        })
+        return Promise.resolve(newSheetColl)
+
+      } else {
         return Promise.resolve(everySheet)
+      }
+      //   if (Object.keys(filters).length > 0) {
+      //     const keysFilter = Object.keys(filters)
+      //     const newSheetColl = everySheet.filter((sheet) => {
+      //       for (let i = 0; i < keysFilter.length; i++) {
+      //         const filterValues = JSON.parse( [keysFilter[i]])
+      //         if (filterStates.includes(keysFilter[i])) {
+      //           if (State.findOneState(sheet[keysFilter[i]], filterValues)) {
+      //             return sheet
+      //           }
+      //         } else {
+      //           if (util.findOne(sheet[keysFilter[i]], filterValues)) {
+      //             return sheet
+      //           }
+      //         }
+      //       }
+      //       return null
+      //     })
+      //     return Promise.resolve(newSheetColl)
+      //   }
+      //   return Promise.resolve(everySheet)
       })
   },
   getLocations: () => {
