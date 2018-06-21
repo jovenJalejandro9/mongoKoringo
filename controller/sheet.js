@@ -4,7 +4,7 @@ const util = require('../lib/utils')
 const Sheet = require('../model/sheet')
 
 const attrParams = ['name', 'first_surname','tel', 'zone', 'address', 'email', 'second_surname', 'birthday', 'id_number', 'complete', 'family_in_charge', 'family_relation', 'family_information', 'education_center',
-  'medical_therapies', 'medical_diagnose', 'medical_mobility', 'medical_wheel_chair', 'medical_comunication',
+  'medical_therapies', 'medical_information', 'education_information','economic_information','house_information', 'medical_mobility', 'medical_wheel_chair', 'medical_comunication',
   'medical_tests', 'medical_treatment', 'home_own_rent', 'home_material', 'economic_familiar_income', 'economic_external_support']
   
 const normalFields = ['name','tel', 'first_surname','zone', 'address', 'second_surname', 'birthday', 'family_information', 'id_number', 'complete', 'urgent_comment', 'important_comment','money_comment',

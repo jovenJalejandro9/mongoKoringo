@@ -34,7 +34,6 @@ module.exports = {
           keysFilters = Object.keys(filters)
           for (let i = 0; i < keysFilters.length; i++) {
             const or = {}
-            debugger
             if(Array.isArray(filters[keysFilters[i]])){
               or[keysFilters[i]] = { $in: JSON.parse(filters[keysFilters[i]]) }
             } else {

@@ -3,7 +3,7 @@ const State = require('../model/state')
 const examples = require('../lib/examples')
 const dbLib = require('../lib/db')
 
-const filterStates = ['medical_information']
+const filterStates = ['medical_information', 'education_information', 'house_information', 'economic_information']
 const compAttrSheet = ['name', 'first_surname', 'zone', 'address', 'tel', 'carer_user']
 const otherAttrs = ['second_surname', 'birthday', 'id_number','education_information', 'education_information', 'medical_information', 
   'house_information', 'economic_information', 'obsGen_information', 'obsMani_information', 'obsDet_information']
@@ -49,21 +49,19 @@ module.exports = {
         const newSheetColl = everySheet.filter((sheet) => {
           for (let filterKey of keysFilter) { 
             if(compAttrSheet.includes(filterKey)){
-              console.log('URL: '+filters[filterKey])
-              console.log(sheet[filterKey])
-              console.log('----')
-              if (filters[filterKey] === sheet[filterKey]){
+              if (sheet[filterKey].includes(filters[filterKey])){
                 return sheet
               }
-            } if (filterStates.includes(filterKey)) { 
-              if (false) { 
-                return sheet
+            } if (filterStates.includes(filterKey)) {
+              const auxFilter = JSON.parse(filters[filterKey])
+              if(util.findLastState(sheet[filterKey], auxFilter.field)) {
+                if(util.findLastState(sheet[filterKey], auxFilter.field).includes(auxFilter.value)) return sheet
+                
               }
             }
           }
         })
         return Promise.resolve(newSheetColl)
-
       } else {
         return Promise.resolve(everySheet)
       }

@@ -31,6 +31,5 @@ dbLib.connect(config.urlDb)
   .then(() => {
     app.listen(5000)
   })
-//  que hago con el console?? a eslint no le mola mucho
   .catch(console.log)
 module.exports = app
